@@ -27,5 +27,12 @@ namespace Lab1.Models
         {
             return "\nSteps for x: " + StepX.ToString() + " Nodes for x: " + NodesX.ToString() + " Steps for y: " + StepY.ToString() + " Nodes for y: " + NodesY.ToString();
         }
+
+        public string ToString(string format)
+        {
+            return "\nSteps for x: " + StepX.ToString(format) + " Nodes for x: " + NodesX.ToString(format) +
+                " Steps for y: " +
+                StepY.ToString(format) + " Nodes for y: " + NodesY.ToString(format);
+        }
     }
 }

@@ -10,6 +10,8 @@ namespace Lab1.Models.Collections
         #region Properties
         public string Info { get; set; }
         public DateTime MeasureDate { get; set; }
+        //V5MCol fix check
+        public abstract List<DataItem> DataItems { get; set; }
         #endregion
 
         // Contructor
@@ -17,9 +19,10 @@ namespace Lab1.Models.Collections
         {
             Info = info;
             MeasureDate = date;
+            DataItems = new List<DataItem>();
         }
 
-        // Methods (over + 2 abstr)
+        // Methods (2 over + 2 abstr)
         public override string ToString()
 
         {
@@ -28,5 +31,10 @@ namespace Lab1.Models.Collections
 
         public abstract Vector2[] NearEqual(float eps);
         public abstract string ToLongString();
+
+        public virtual string ToString(string format)
+        {
+            return "V5Data:\nInfo: " + Info.ToString() + "\nDate: " + MeasureDate.ToString(format);
+        }
     }
 }
