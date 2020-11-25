@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Text;
 
 namespace Lab1.Models
 {
-    public struct DataItem
+    public struct DataItem : IComparable<DataItem>
     {
         public Vector2 coordinate { get; set; }
         public Vector2 value { get; set; }
@@ -25,6 +26,21 @@ namespace Lab1.Models
         public string ToString(string format)
         {
             return coordinate.ToString(format) + " " + value.ToString(format);
+        }
+
+
+
+        public int CompareTo([AllowNull] DataItem other)
+        {
+            if (coordinate.Length() < other.coordinate.Length())
+                return -1;
+            if (coordinate.Length() == other.coordinate.Length())
+                return 0;
+            if (coordinate.Length() > other.coordinate.Length())
+                return 1;
+            else
+                return -1;
+
         }
     }
 }

@@ -63,6 +63,7 @@ namespace Lab1
                     Console.WriteLine(s2.ToString());
                 }
             
+
         }
     }
 }

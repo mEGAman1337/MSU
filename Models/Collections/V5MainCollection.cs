@@ -23,7 +23,7 @@ namespace Lab1.Models.Collections
             {
                 return from data in DataList
                        from item in data.DataItems
-                       orderby item.coordinate
+                       orderby item
                        select item;
             }
         }
