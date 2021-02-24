@@ -3,30 +3,31 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using System.Text;
 
 namespace Lab1.Models.Collections
 {
     public class V5DataCollection : V5Data, IEnumerable<DataItem>
     {
-        // Prop
-        public override List<DataItem> DataItems { get; set; }
-        public Dictionary<System.Numerics.Vector2, System.Numerics.Vector2> dictionary { get; set; }
+        public Dictionary<Vector2, Vector2> Dictionary { get; set; }
 
         // Constructor
         public V5DataCollection(string info, DateTime date) : base(info, date)
         {
-            dictionary = new Dictionary<Vector2, Vector2>();
+            Dictionary = new Dictionary<Vector2, Vector2>();
             DataItems = new List<DataItem>();
         }
 
-        //Данные представлены в виде 4 колонок
-        //x (x coord), y (y coord), xVal (value in x), yVal (value in y)
+        /*
+         * Данные хранятся в файле 'V5Data.txt'
+         * Каждая строка является описанием одного объекта типа 'KeyValuePair<Vector2, Vector2>'
+         * Значения записаны через пробел, чтение происходит построчно после применения операции string.Split(' ')
+         * x (x coord), y (y coord), xVal (value in x), yVal (value in y)
+         */
         public V5DataCollection(string info, DateTime date, string filename) : base(info, date)
         {
             try
             {
-                dictionary = new Dictionary<Vector2, Vector2>();
+                Dictionary = new Dictionary<Vector2, Vector2>();
                 using (StreamReader sr = new StreamReader(filename))
                 {
                     string str1, str2;
@@ -37,7 +38,7 @@ namespace Lab1.Models.Collections
                         str2 = str1;
 
                         //Делим пробелами
-                        string[] pool = str2.Split(new char[] { ' ' });
+                        string[] pool = str2.Split(' ');
 
                         x = float.Parse(pool[0]);
                         y = float.Parse(pool[1]);
@@ -47,29 +48,32 @@ namespace Lab1.Models.Collections
                         key = new Vector2(x, y);
                         value = new Vector2(xVal, yVal);
                         Console.WriteLine(value);
-                        dictionary.Add(key, value);
+                        Dictionary.Add(key, value);
                     }
                 }
             }
             catch (Exception exc)
             {
                 Console.WriteLine("Cannot read file: " + exc.Message);
+                Console.WriteLine("Exiting program due to fatal error in reading file...");
+                throw;
             }
         }
 
         // Methods
         public void InitRandom(int nItems, float xmax, float ymax, float minValue, float maxValue)
         {
-            Random rand = new Random();
+            var random = Program.Random;
+
             float ran1, ran2, ran3, ran4, x2, y2, x1, y1;
             Vector2 keyD, valueD; //local table fix
             DataItem loc;
             for (int i = 0; i < nItems; i++)
             {
-                ran1 = (float)rand.NextDouble();
-                ran2 = (float)rand.NextDouble();
-                ran3 = (float)rand.NextDouble();
-                ran4 = (float)rand.NextDouble();
+                ran1 = (float)random.NextDouble();
+                ran2 = (float)random.NextDouble();
+                ran3 = (float)random.NextDouble();
+                ran4 = (float)random.NextDouble();
 
                 x1 = minValue * ran1 + maxValue * (1 - ran1);
                 y1 = minValue * ran2 + maxValue * (1 - ran2);
@@ -82,14 +86,17 @@ namespace Lab1.Models.Collections
                 loc = new DataItem(keyD, valueD);
                 DataItems.Add(loc);
 
-                dictionary.Add(keyD, valueD);
+                if (!Dictionary.ContainsKey(keyD))
+                {
+                    Dictionary.Add(keyD, valueD);
+                }
             }
         }
 
         public override Vector2[] NearEqual(float eps)
         {
             List<Vector2> list = new List<Vector2>();
-            foreach (KeyValuePair<Vector2, Vector2> pair in dictionary)
+            foreach (KeyValuePair<Vector2, Vector2> pair in Dictionary)
             {
                 Vector2 addition = pair.Value;
                 if (Math.Abs(addition.X - addition.Y) <= eps)
@@ -103,14 +110,14 @@ namespace Lab1.Models.Collections
         public override string ToString()
 
         {
-            string str = "V5DataCollection(s): " + Info + " " + MeasureDate.ToString() + "\nNumber of elements: " + dictionary.Count + "\n";
+            string str = "V5DataCollection(s): " + Info + " " + MeasureDate + "\nNumber of elements: " + Dictionary.Count + "\n";
             return str;
         }
 
         public override string ToLongString()
         {
-            string str = "V5DataCollection(ls):" + Info + " " + MeasureDate.ToString() + "\nNumber of elements: " + dictionary.Count + "\n";
-            foreach (KeyValuePair<Vector2, Vector2> pair in dictionary)
+            string str = "V5DataCollection(ls):" + Info + " " + MeasureDate + "\nNumber of elements: " + Dictionary.Count + "\n";
+            foreach (KeyValuePair<Vector2, Vector2> pair in Dictionary)
             {
                 str += "V5DC: " + pair.Key + " " + pair.Value + "\n";
             }
@@ -119,8 +126,8 @@ namespace Lab1.Models.Collections
 
         public string ToLongString(string format)
         {
-            string str = "V5DataCollection(ls):" + Info + " " + MeasureDate.ToString(format) + "\nNumber of elements: " + dictionary.Count + "\n";
-            foreach (KeyValuePair<Vector2, Vector2> pair in dictionary)
+            string str = "V5DataCollection(ls):" + Info + " " + MeasureDate.ToString(format) + "\nNumber of elements: " + Dictionary.Count + "\n";
+            foreach (KeyValuePair<Vector2, Vector2> pair in Dictionary)
             {
                 str += pair.Key + " " + pair.Value.ToString(format) + "\n";
             }
@@ -133,7 +140,7 @@ namespace Lab1.Models.Collections
             Vector2 val, coord;
             DataItem addition;
 
-            foreach (KeyValuePair<Vector2, Vector2> pair in dictionary)
+            foreach (KeyValuePair<Vector2, Vector2> pair in Dictionary)
             {
                 val = pair.Value;
                 coord = pair.Key;
@@ -149,7 +156,7 @@ namespace Lab1.Models.Collections
             Vector2 value, coordinate;
             DataItem tmp;
 
-            foreach (KeyValuePair<Vector2, Vector2> pair in dictionary)
+            foreach (KeyValuePair<Vector2, Vector2> pair in Dictionary)
             {
                 coordinate = pair.Key;
                 value = pair.Value;
