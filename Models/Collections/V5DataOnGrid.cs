@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
-using System.Text;
 
 namespace Lab1.Models.Collections
 {
@@ -11,7 +10,6 @@ namespace Lab1.Models.Collections
         // Prop
         public Grid2D GridData { get; set; }
         public Vector2[,] NodeScore { get; set; }
-        public override List<DataItem> DataItems { get; set; }
 
         // Contructor
         public V5DataOnGrid(string info, DateTime date, Grid2D grid) : base(info, date)
@@ -24,10 +22,8 @@ namespace Lab1.Models.Collections
         // Methods (5)
         public void InitRandom(float minValue, float maxValue)
         {
-            Random rand = new Random();
+            var rand = Program.Random;
             float rand1, rand2, minv, maxv;
-            Vector2 coordinate, value;
-            DataItem addition = new DataItem();
             DataItems = new List<DataItem>();
 
             for (int i = 0; i < GridData.NodesX; i++)
@@ -40,12 +36,9 @@ namespace Lab1.Models.Collections
                     maxv = minValue * rand2 + maxValue * (1 - rand2);
                     NodeScore[i, j] = new Vector2(minv, maxv);
 
-                    //dataitems fix?
-                    coordinate.X = i;
-                    coordinate.Y = j;
-                    value.X = minv;
-                    value.Y = maxv;
-                    DataItems.Add(addition);
+                    var coordinate = new Vector2(i, j);
+                    var value = new Vector2(minv, maxv);
+                    DataItems.Add(new DataItem(coordinate, value));
                 }
             }
         }
@@ -65,13 +58,13 @@ namespace Lab1.Models.Collections
         public override string ToString()
 
         {
-            string str = "V5DataOnGrid(s):\n" + Info + " " + MeasureDate.ToString() + " " + GridData.ToString() + "\n";
+            string str = "V5DataOnGrid(s):\n" + Info + " " + MeasureDate + " " + GridData + "\n";
             return str;
         }
 
         public override string ToLongString()
         {
-            string str = "V5DataOnGrid(ls):\n" + Info + " " + MeasureDate.ToString() + " " + GridData.ToString() + "\n";
+            string str = "V5DataOnGrid(ls):\n" + Info + " " + MeasureDate + " " + GridData + "\n";
             for (int i = 0; i < GridData.NodesX; i++)
                 for (int j = 0; j < GridData.NodesY; j++)
                 {
@@ -97,24 +90,24 @@ namespace Lab1.Models.Collections
         {
             int i, j;
             Vector2 key, value;
-            V5DataCollection Result;
-            Result = new V5DataCollection(x.Info, x.MeasureDate);
+            V5DataCollection result;
+            result = new V5DataCollection(x.Info, x.MeasureDate);
             for (i = 0; i < x.GridData.NodesX; i++)
                 for (j = 0; j < x.GridData.NodesY; j++)
                 {
                     key = new Vector2(i, j);
                     value = new Vector2(x.NodeScore[i, j].X, x.NodeScore[i, j].Y);
-                    Result.dictionary.Add(key, value);
+                    result.Dictionary.Add(key, value);
                 }
-            return Result;
+            return result;
         }
 
         public IEnumerator<DataItem> GetEnumerator()
         {
-            List<DataItem> list = new List<DataItem>();
             DataItem tmp;
             Vector2 coordinate, value;
             for (int i = 0; i < GridData.NodesX; i++)
+            {
                 for (int j = 0; j < GridData.NodesY; j++)
                 {
                     coordinate.X = i;
@@ -122,14 +115,13 @@ namespace Lab1.Models.Collections
                     value.X = NodeScore[i, j].X;
                     value.Y = NodeScore[i, j].Y;
                     tmp = new DataItem(coordinate, value);
-                    list.Add(tmp);
+                    yield return tmp;
                 }
-            return list.GetEnumerator();
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            List<DataItem> list = new List<DataItem>();
             DataItem tmp;
             Vector2 coordinate, value;
             for (int i = 0; i < GridData.NodesX; i++)
@@ -140,9 +132,8 @@ namespace Lab1.Models.Collections
                     value.X = NodeScore[i, j].X;
                     value.Y = NodeScore[i, j].Y;
                     tmp = new DataItem(coordinate, value);
-                    list.Add(tmp);
+                    yield return tmp;
                 }
-            return list.GetEnumerator();
         }
     }
 }
