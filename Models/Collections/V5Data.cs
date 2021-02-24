@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
-using System.Text;
 
 namespace Lab1.Models.Collections
 {
@@ -10,8 +9,11 @@ namespace Lab1.Models.Collections
         #region Properties
         public string Info { get; set; }
         public DateTime MeasureDate { get; set; }
-        //V5MCol fix check
-        public abstract List<DataItem> DataItems { get; set; }
+        
+        /// <summary>
+        /// Коллекция DataItems (определена лишь здесь в базовом классе для устранения дублирования данных)
+        /// </summary>
+        protected internal List<DataItem> DataItems { get; set; }
         #endregion
 
         // Contructor
@@ -26,7 +28,7 @@ namespace Lab1.Models.Collections
         public override string ToString()
 
         {
-            return "V5Data:\nInfo: " + Info.ToString() + "\nDate: " + MeasureDate.ToString();
+            return $"V5Data: Info: {Info}, Date: {MeasureDate}";
         }
 
         public abstract Vector2[] NearEqual(float eps);
@@ -34,7 +36,7 @@ namespace Lab1.Models.Collections
 
         public virtual string ToString(string format)
         {
-            return "V5Data:\nInfo: " + Info.ToString() + "\nDate: " + MeasureDate.ToString(format);
+            return $"V5Data: Info: {Info}, Date: {MeasureDate.ToString(format)}";
         }
     }
 }

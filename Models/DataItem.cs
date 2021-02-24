@@ -1,31 +1,35 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
-using System.Text;
+using Lab1.Extensions;
 
 namespace Lab1.Models
 {
     public struct DataItem : IComparable<DataItem>
     {
-        public Vector2 coordinate { get; set; }
-        public Vector2 value { get; set; }
+        public Vector2 Coordinate { get; set; }
+        public Vector2 Value { get; set; }
 
         public DataItem(Vector2 coord, Vector2 val)
         {
-            coordinate = coord;
-            value = val;
+            Coordinate = coord;
+            Value = val;
         }
 
         public override string ToString()
         {
-            return coordinate.ToString() + " " + value.ToString();
+            return Coordinate + " " + Value;
         }
 
         public string ToString(string format)
         {
-            return coordinate.ToString(format) + " " + value.ToString(format);
+            return Coordinate.ToString(format) + " " + Value.ToString(format);
+        }
+
+        public int CompareTo(DataItem other)
+        {
+            if (Coordinate.CustomLength() > other.Coordinate.CustomLength()) return 1;
+            if (Coordinate.CustomLength() < other.Coordinate.CustomLength()) return -1;
+            return 0;
         }
 
 

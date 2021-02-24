@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Lab1.Models
+﻿namespace Lab1.Models
 {
     struct Grid2D
     {
@@ -25,7 +21,7 @@ namespace Lab1.Models
         public override string ToString()
 
         {
-            return "\nSteps for x: " + StepX.ToString() + " Nodes for x: " + NodesX.ToString() + " Steps for y: " + StepY.ToString() + " Nodes for y: " + NodesY.ToString();
+            return "\nSteps for x: " + StepX + " Nodes for x: " + NodesX + " Steps for y: " + StepY + " Nodes for y: " + NodesY;
         }
 
         public string ToString(string format)
